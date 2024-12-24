@@ -51,23 +51,6 @@ You can switch the **Code Preview** feature on or off using the `-debug` or `--s
 gemicli -debug
 ```
 
-## Example Commands
-
-- Configure API key:
-  ```bash
-  gemicli -conf YOURAPIKEY
-  ```
-
-- Run a command with a prompt:
-  ```bash
-  gemicli -p "Generate a to-do list for today"
-  ```
-
-- Toggle **Code Preview** off:
-  ```bash
-  gemicli -debug
-  ```
-
 ## Contributing
 
 If you'd like to contribute to **Gemicli**, feel free to fork the repository, make changes, and submit a pull request.
