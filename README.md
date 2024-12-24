@@ -1,4 +1,3 @@
-```markdown
 # Gemicli
 
 **Gemicli** is a Python package designed for executing simple tasks in the terminal using **Gemini AI**.
