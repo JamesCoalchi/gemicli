@@ -80,7 +80,7 @@ def main(prompt, configure, switch_debug, version):
         return
     
     if version:
-        click.echo("MyCLI version 1.2.1")
+        click.echo("Gemicli version 1.2.1")
         return
     
     if switch_debug:
