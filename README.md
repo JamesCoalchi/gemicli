@@ -48,10 +48,10 @@ or
 
 ### Step 1: Configure the Gemini API Key
 
-Before using the package, you need to configure your Gemini API key. Use the `-conf` or `--configure` flag followed by your API key:
+Before using the package, you need to configure your Gemini API key. Use the `-config` or `--configure` flag followed by your API key:
 
 ```
-gemicli -conf YOURAPIKEY
+gemicli -config YOURAPIKEY
 ```
 
 ### Step 2: Use the Package with a Prompt
