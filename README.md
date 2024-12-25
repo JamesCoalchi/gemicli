@@ -37,11 +37,11 @@ To install **Gemicli**, follow these steps:
 
 Run the following command to verify the installation:
 ```
-   gemicli -v
+gemicli -v
 ```
 or
 ```
-   gemicli --version
+gemicli --version
 ```
 
 ## Usage
