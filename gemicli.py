@@ -64,7 +64,7 @@ def install_missing_packages(packages, api_key):
         try:
             package_names = model.generate_content(
                 f"You are an AI designed to map Python package names to their corresponding installation package names. For each package, provide the exact package name that can be used with pip for installation. Example: Input: cv2, qrcode. Output: opencv-python, qrcode. Now, process the following list: {install_packages}."
-            ).text.replace('\n', '').strip()
+            ).text.replace('\n', '').strip().replace(',', '')
             subprocess.check_call([sys.executable, "-m", "pip", "install", *package_names.split()])
         except Exception as e:
             click.echo(f"Error installing packages: {e}")
