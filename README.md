@@ -6,6 +6,10 @@
 
 Gemicli is currently in **beta**. While the core functionality is available, please be aware that it may contain bugs, incomplete features, or unexpected behavior. Use it with caution and feel free to report any issues or improvements on GitHub.
 
+# Showcase
+
+[![asciicast](https://asciinema.org/a/696070.svg)](https://asciinema.org/a/696070)
+
 ## Installation
 
 ### Prerequisites  
