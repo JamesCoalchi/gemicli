@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="gemicli",
-    version="1.2.0",
+    version="1.2.2",
     description="Python package designed for executing simple tasks in the terminal using Gemini AI.",
     author="James",
     author_email="jamie@jamescoalchi.space",

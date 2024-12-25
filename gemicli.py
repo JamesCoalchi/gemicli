@@ -59,8 +59,11 @@ def install_missing_packages(packages, api_key):
                 click.echo(f"Package {package} is missing. Adding to the missing packages list...")
             install_packages.append(package)
     if install_packages:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        try:
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-1.5-flash")
+        except Exception as e:
+            click.echo(e)
         try:
             package_names = model.generate_content(
                 f"You are an AI designed to map Python package names to their corresponding installation package names. For each package, provide the exact package name that can be used with pip for installation. Example: Input: cv2, qrcode. Output: opencv-python, qrcode. Now, process the following list: {install_packages}."
@@ -80,7 +83,7 @@ def main(prompt, configure, switch_debug, version):
         return
     
     if version:
-        click.echo("Gemicli version 1.2.1")
+        click.echo("Gemicli version 1.2.2")
         return
     
     if switch_debug:
@@ -94,13 +97,18 @@ def main(prompt, configure, switch_debug, version):
         click.echo("API key not found. Please configure it using the -conf (or --configure) option.")
         return
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+    except Exception as e:
+        click.echo(e)
+        return
 
     if prompt:
         try:
+            click.echo(f"Received task: {prompt}")
             code = model.generate_content(
-                f"Generate Python code for the task: {prompt}. The code should be presented without comments, explanations, or formatting markers like `python`. Example of incorrect formatting: ```python CODE``` Correct formatting: CODE. If debugging is necessary, include `click.echo()` statements to show the state of the code. Do not include commands to install packages (e.g., 'pip install package_name')."
+                f"Generate Python code for the task: {prompt}. The code should be presented without comments, explanations, or formatting markers like `python`. If debugging is necessary, include `click.echo()` statements to show the state of the code. Do not include commands to install packages (e.g., 'pip install package_name')."
             ).text.strip().replace('```python','').replace('```','')
 
             if load_show_code_state() == "enabled":
