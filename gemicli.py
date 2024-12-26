@@ -67,7 +67,7 @@ def install_missing_packages(packages, api_key):
         try:
             package_names = model.generate_content(
                 f"You are an AI designed to map Python package names to their corresponding installation package names. For each package, provide the exact package name that can be used with pip for installation. Example: Input: cv2, qrcode. Output: opencv-python, qrcode. Now, process the following list: {install_packages}."
-            ).text.replace('\n', '').strip().replace(',', '')
+            ).text.replace('\n', '').replace(',', '')
             subprocess.check_call([sys.executable, "-m", "pip", "install", *package_names.split()])
         except Exception as e:
             click.echo(f"Error installing packages: {e}")
@@ -83,7 +83,7 @@ def main(prompt, configure, switch_debug, version):
         return
     
     if version:
-        click.echo("Gemicli version 1.2.2")
+        click.echo("Gemicli version 1.2.3")
         return
     
     if switch_debug:
@@ -108,7 +108,7 @@ def main(prompt, configure, switch_debug, version):
         try:
             click.echo(f"Received task: {prompt}")
             code = model.generate_content(
-                f"Generate Python code for the task: {prompt}. The code should be presented without comments, explanations, or formatting markers like `python`. If debugging is necessary, include `click.echo()` statements to show the state of the code. Do not include commands to install packages (e.g., 'pip install package_name')."
+                f"Generate Python code for the task: {prompt}. The code should be presented without comments, explanations, or formatting markers like `python`. Do not include commands to install packages (e.g., 'pip install package_name')."
             ).text.strip().replace('```python','').replace('```','')
 
             if load_show_code_state() == "enabled":
@@ -144,7 +144,8 @@ def main(prompt, configure, switch_debug, version):
                     click.echo(f"Error while executing code: {e}")
             else:
                 if load_show_code_state() == "enabled":
-                    click.echo("Code might not be safe to execute.")
+			click.echo(f"Generated code: {code}")
+                click.echo("Code might not be safe to execute.")
         except Exception as e:
             click.echo(f"Error generating or processing code: {e}")
 
