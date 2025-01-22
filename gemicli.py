@@ -5,6 +5,7 @@ import os
 import click
 import google.generativeai as genai
 
+
 def save_api_key(key):
     key_file = os.path.expanduser("~/.gemini_api_key")
     try:
@@ -14,6 +15,7 @@ def save_api_key(key):
     except IOError as e:
         click.echo(f"Error saving API key: {e}")
 
+
 def load_api_key():
     key_file = os.path.expanduser("~/.gemini_api_key")
     try:
@@ -21,6 +23,7 @@ def load_api_key():
             return f.read().strip()
     except FileNotFoundError:
         return None
+
 
 def save_show_code_state():
     show_code_state_file = os.path.expanduser("~/.code_preview")
@@ -35,6 +38,7 @@ def save_show_code_state():
     except IOError as e:
         click.echo(f"Error toggling code preview state: {e}")
 
+
 def load_show_code_state():
     show_code_state_file = os.path.expanduser("~/.code_preview")
     if os.path.exists(show_code_state_file):
@@ -45,9 +49,11 @@ def load_show_code_state():
             click.echo(f"Error reading code preview state: {e}")
             return "enabled"
     else:
-        click.echo("Config file does not exist. Creating config file with 'Code Preview' enabled.")
+        click.echo(
+            "Config file does not exist. Creating config file with 'Code Preview' enabled.")
         save_show_code_state()
         return 'enabled'
+
 
 def install_missing_packages(packages, api_key):
     install_packages = []
@@ -56,7 +62,8 @@ def install_missing_packages(packages, api_key):
             __import__(package)
         except ImportError:
             if load_show_code_state() == "enabled":
-                click.echo(f"Package {package} is missing. Adding to the missing packages list...")
+                click.echo(
+                    f"Package {package} is missing. Adding to the missing packages list...")
             install_packages.append(package)
     if install_packages:
         try:
@@ -68,24 +75,30 @@ def install_missing_packages(packages, api_key):
             package_names = model.generate_content(
                 f"You are an AI designed to map Python package names to their corresponding installation package names. For each package, provide the exact package name that can be used with pip for installation. Example: Input: cv2, qrcode. Output: opencv-python, qrcode. Now, process the following list: {install_packages}."
             ).text.replace('\n', '').replace(',', '')
-            subprocess.check_call([sys.executable, "-m", "pip", "install", *package_names.split()])
+            subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", *package_names.split()])
         except Exception as e:
             click.echo(f"Error installing packages: {e}")
 
+
 @click.command()
-@click.option("-p", "--prompt", required=False, help="User prompt to generate code.")
-@click.option("-config", "--configure", required=False, help="Configure the Gemini API key.")
-@click.option("-debug", "--switch_debug", is_flag=True, help="Switch 'Code Preview' function On/Off.")
-@click.option("-v", "--version", is_flag=True, help="Show the version and exit.")
+@click.option("-p", "--prompt", required=False,
+              help="User prompt to generate code.")
+@click.option("-config", "--configure", required=False,
+              help="Configure the Gemini API key.")
+@click.option("-debug", "--switch_debug", is_flag=True,
+              help="Switch 'Code Preview' function On/Off.")
+@click.option("-v", "--version", is_flag=True,
+              help="Show the version and exit.")
 def main(prompt, configure, switch_debug, version):
     if configure:
         save_api_key(configure)
         return
-    
+
     if version:
         click.echo("Gemicli version 1.2.3")
         return
-    
+
     if switch_debug:
         click.echo("Switching 'Code Preview' state")
         save_show_code_state()
@@ -94,7 +107,8 @@ def main(prompt, configure, switch_debug, version):
 
     api_key = load_api_key()
     if not api_key:
-        click.echo("API key not found. Please configure it using the -conf (or --configure) option.")
+        click.echo(
+            "API key not found. Please configure it using the -conf (or --configure) option.")
         return
 
     try:
@@ -109,7 +123,7 @@ def main(prompt, configure, switch_debug, version):
             click.echo(f"Received task: {prompt}")
             code = model.generate_content(
                 f"Generate Python code for the task: {prompt}. The code should be presented without comments, explanations, or formatting markers like `python`. Do not include commands to install packages (e.g., 'pip install package_name')."
-            ).text.strip().replace('```python','').replace('```','')
+            ).text.strip().replace('```python', '').replace('```', '')
 
             if load_show_code_state() == "enabled":
                 click.echo("Generated Code:")
@@ -121,7 +135,7 @@ def main(prompt, configure, switch_debug, version):
 
             if load_show_code_state() == "enabled":
                 click.echo(safe_check)
-            
+
             if safe_check == "safe":
                 if load_show_code_state() == "enabled":
                     click.echo("Code is safe to execute.")
@@ -144,10 +158,11 @@ def main(prompt, configure, switch_debug, version):
                     click.echo(f"Error while executing code: {e}")
             else:
                 if load_show_code_state() == "enabled":
-			click.echo(f"Generated code: {code}")
+                    click.echo(f"Generated code: {code}")
                 click.echo("Code might not be safe to execute.")
         except Exception as e:
             click.echo(f"Error generating or processing code: {e}")
+
 
 if __name__ == "__main__":
     main()
